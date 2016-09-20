@@ -1,9 +1,11 @@
 package demo;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 
@@ -14,13 +16,19 @@ public class Main {
         Router router = Router.router(vertx);
         Handlers handlers = new Handlers();
 
+
+        router.route("/api/*").handler(CorsHandler.create("http://localhost:4200/*")
+                .allowedMethod(HttpMethod.GET)
+                .allowedHeader("Authorization")
+                .allowedHeader("Content-Type")
+                .allowCredentials(true));
+
         JsonObject config = new JsonObject()
-                .put("public-key", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhRFdKYS46j0/lBDyw/FhVpNQk1tjwNERsop9Sg5wRe1ZDpnWa9sOwxzt4AwSzw8XR/0hukx2QbIrSOEQP98Q3d5nW3QFaiTsX+/f10Hvfsr8gA7xneoemRaxP+4Ed+2QpcsuevXY30NBKg67cXfy3jMgXCpKJzlza36pyvakrWIc0Gr7NWYZB0RIMb/jx6lVd1O/2sopytMC+LqzL15xK8zBBRx6jtiO2v2VA54iAiLvcQWmipa8BZTaMRVy26k+rZ0k/6NO9JwTSpOsmecNkT05OB7vU4MrXfFvifsZsH3IZaS+Hnnc/Px0SMkH/FyfJbo/kbTRiFasy8/gMlCPVwIDAQAB")
+                .put("public-key", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmu1bWx2D/a5sPoI8g8n/cQxCyRhjolzFJj4RS7HJ1crGBiMFar0CQPX6XYeyU21nTGwJwjdCDYv9PHC9N97LkfjHMEyo928liwcHRt3P7L+JxYZOB76sKAAFQboLEGB8P1jEya9R0LSxclqwu3U6EcIFF3FlGUw7tT4011o8oUrlHvQXjWiTFsoPhsqAG/Ib3rZv242yCgkewBk/jN1Phg+NwQV+/+RzWX6hVrhiLmkpR9ojrnRh63v6rk9cHAcKuhBT0mfYG0YgBegp9JydKPI+SvwwvGFoIBIdVSk9q/Ys/C+x/ytJY0+043LzcES3ehERK4JSy/WxG9I0j4gYxQIDAQAB")
                 .put("permissionsClaimKey", "realm_access/roles");
         JWTAuth authProvider = JWTAuth.create(vertx, config);
 
         router.route("/api/*").handler(JWTAuthHandler.create(authProvider));
-
         router.route("/api/*").handler(handlers::userLogger);
 
         StaticHandler staticHandler = StaticHandler.create("webroot/dist");

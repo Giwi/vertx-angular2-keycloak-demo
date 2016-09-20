@@ -27,7 +27,7 @@ public class Handlers {
         User user = rc.user();
         if (user != null) {
             JsonObject principal = user.principal();
-            log.info("Request by %", principal.toString());
+            log.info("Request by {}", principal.getString("preferred_username"));
         } else {
             log.error("No logged in user");
         }
