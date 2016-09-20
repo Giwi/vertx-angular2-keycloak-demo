@@ -2,6 +2,9 @@ group 'demo'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = "demo.Main"
+applicationDefaultJvmArgs = ["-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory"]
 
 sourceCompatibility = 1.8
 

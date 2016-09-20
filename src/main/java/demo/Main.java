@@ -16,7 +16,6 @@ public class Main {
         Router router = Router.router(vertx);
         Handlers handlers = new Handlers();
 
-
         router.route("/api/*").handler(CorsHandler.create("http://localhost:4200/*")
                 .allowedMethod(HttpMethod.GET)
                 .allowedHeader("Authorization")
@@ -31,10 +30,15 @@ public class Main {
         router.route("/api/*").handler(JWTAuthHandler.create(authProvider));
         router.route("/api/*").handler(handlers::userLogger);
 
-        StaticHandler staticHandler = StaticHandler.create("webroot/dist");
-        router.route("/ui/*").handler(staticHandler::handle);
 
         router.route("/api/books").handler(handlers::listBooks);
+
+        StaticHandler keycloakStaticHandler = StaticHandler.create("webroot/keycloak");
+        router.route("/keycloak/*").handler(keycloakStaticHandler::handle);
+
+        StaticHandler staticHandler = StaticHandler.create("webroot/dist");
+        router.route("/*").handler(staticHandler::handle);
+
 
         vertx.createHttpServer().requestHandler(router::accept).listen(8000);
 
