@@ -1,0 +1,31 @@
+group 'demo'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+version = '3.3.3'
+
+
+dependencies {
+
+    compile "io.vertx:vertx-core:$version"
+    compile "io.vertx:vertx-web:$version"
+    compile "io.vertx:vertx-auth-jwt:$version"
+    compile "io.vertx:vertx-auth-jwt:$version"
+    compile "io.vertx:vertx-rx:$version"
+    compile "io.vertx:vertx-service-discovery:$version"
+    compile "io.vertx:vertx-service-discovery-bridge-kubernetes:$version"
+    compile "io.vertx:vertx-circuit-breaker:$version"
+    compile "io.vertx:vertx-service-discovery:$version"
+    compile "io.vertx:vertx-unit:$version"
+    compile "io.vertx:vertx-hazelcast:$version"
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
