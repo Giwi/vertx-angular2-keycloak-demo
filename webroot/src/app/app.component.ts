@@ -7,15 +7,13 @@ import { DemoService } from './demo.service'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+  books : any[];
 
   constructor(private demoService : DemoService) {
-console.log("getting books")
     demoService.listBooks().subscribe(list => {
-      console.log(list)
-    },
-        err => {
-      console.log(err.message)
-        })
+      this.books = list;
+    }, err => {
+      console.log("Error retrieving books. Is the server running, and is Keycloak configured correctly?", err.message);
+    })
   }
 }
